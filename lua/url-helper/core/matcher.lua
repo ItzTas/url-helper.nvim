@@ -3,20 +3,23 @@ local M = {}
 local lpeg = vim.lpeg
 local Cp = lpeg.Cp
 local C = lpeg.C
+local P = lpeg.P
+local V = lpeg.V
 
 local pattern_module = require("url-helper.core.patterns")
-local lpeg_pattern = pattern_module.lpeg_pattern
+local pattern = pattern_module.pattern
+
+local function anywhere(p)
+    return P({ Cp() * C(p) * Cp() + 1 * V(1) })
+end
 
 ---@param text string
 ---@return number|nil, number|nil, string|nil
 function M.find_match_lpeg(text)
-    local start_pos, url, end_pos = lpeg.match(Cp() * C(lpeg_pattern) * Cp(), text)
+    local find_pattern = anywhere(Cp() * pattern * Cp())
+    local start_pos, url, end_pos = find_pattern:match(text)
 
-    -- if not start_pos then
-    --     return nil, nil, nil
-    -- end
-
-    return start_pos, end_pos - 1, url
+    return start_pos, end_pos, url
 end
 
 return M
