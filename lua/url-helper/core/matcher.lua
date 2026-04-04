@@ -10,7 +10,7 @@ local pattern_module = require("url-helper.core.patterns")
 local pattern = pattern_module.pattern
 
 local function anywhere(p)
-    return P({ Cp() * C(p) * Cp() + 1 * V(1) })
+    return P({ p + 1 * V(1) })
 end
 
 ---@param text string
